@@ -5,12 +5,16 @@ import { NavigationContainer, StackActions } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import { HomeScreen } from './components/HomeScreen'
+import { DetailScreen } from './components/DetailScreen'
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home">
+          { (props) => <HomeScreen {...props} text="Hello Home Screen" /> }
+        </Stack.Screen>
+        <Stack.Screen name="Detail" component={DetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
