@@ -6,11 +6,17 @@ export const HomeScreen = (props) => {
   const navigation = useNavigation()
 
   const renderList = ({item}) => (
-    <ListItem id={item.id} amount={item.amount} category={item.category} />
+    <ListItem 
+    id={item.id} 
+    amount={item.amount} 
+    category={item.category} 
+    clickHandler = {showDetail}
+    item = {item}
+    />
   )
   
   const showDetail = ( item ) => {
-    
+    navigation.navigate("Detail", item )
   }
 
   return (
@@ -28,10 +34,12 @@ export const HomeScreen = (props) => {
 
 const ListItem = (props) => {
   return (
-    <View style={homeStyle.item}>
-      <Text>{props.category}</Text>
-      <Text>$ {props.amount}</Text>
-    </View>
+    <TouchableOpacity onPress={ () => props.clickHandler(props.item) }>
+      <View style={homeStyle.item}>
+        <Text>{props.category}</Text>
+        <Text>$ {props.amount}</Text>
+      </View>
+    </TouchableOpacity>
   )
 }
 
