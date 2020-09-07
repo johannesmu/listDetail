@@ -1,8 +1,22 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Button, FlatList } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { TextInput } from 'react-native-gesture-handler'
+import RNPickerSelect from 'react-native-picker-select'
+// import {Picker} from '@react-native-community/picker'
+
+
 
 export const HomeScreen = (props) => {
+  const selectItems = [
+    {label: "Food", value: "food"},
+    {label: "Transport", value: "transport"},
+    {label: "Groceries", value: "groceries"},
+    {label: "Bills", value: "bills"},
+  ]
+
+  const [category,setCategory] = useState(null)
+
   const navigation = useNavigation()
 
   const renderList = ({item}) => (
@@ -20,9 +34,19 @@ export const HomeScreen = (props) => {
   }
 
   return (
-    <View>
-      <Text>{props.text}</Text>
-      {/* <Button title="Go to Detail" onPress={() => {navigation.navigate("Detail")}} /> */}
+    <View style={homeStyle.container}>
+      <View>
+        <TextInput style={homeStyle.input} placeholder="amount" />
+        <RNPickerSelect
+          onValueChange={ (value) => setCategory(value) }
+          items = { selectItems }
+          useNativeAndroidPickerStyle={false}
+        />
+        {/* <Picker style={{height: 50, width: 100}}>
+          <Picker.Item label="food" value="food" />
+          <Picker.Item label="bills" value="bills" />
+        </Picker> */}
+      </View>
       <FlatList
       data = {props.data}
       renderItem = {renderList} 
@@ -44,6 +68,10 @@ const ListItem = (props) => {
 }
 
 const homeStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
   item: {
     paddingHorizontal: 15,
     paddingVertical: 20,
@@ -51,5 +79,13 @@ const homeStyle = StyleSheet.create({
     borderBottomColor: '#cccccc',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  }
+  },
+  input: {
+    padding: 10,
+    borderColor: '#cccccc',
+    borderWidth: 1,
+    borderRadius: 10,
+    backgroundColor: '#ffffff',
+    marginVertical: 15,
+  },
 })
