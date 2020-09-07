@@ -16,6 +16,7 @@ if ( !firebase.apps.length ){
 import { HomeScreen } from './components/HomeScreen'
 import { DetailScreen } from './components/DetailScreen'
 import { AuthScreen } from './components/AuthScreen'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Data = [
   {
@@ -101,7 +102,22 @@ export default function App() {
         <Stack.Screen name="Register">
           { (props) => <AuthScreen {...props} signup={ register } loggedIn={auth} /> }
         </Stack.Screen>
-        <Stack.Screen name="Home">
+        <Stack.Screen 
+          name="Home"
+          options={({navigation,route}) => ({
+            headerTitle: "Expenses",
+            headerRight: () => (
+              <TouchableOpacity onPress={ () => {
+                firebase.auth().signOut().then( () => {
+                  setAuth(false)
+                  navigation.reset({ index: 0, routes: [{name: "Register"}] })
+                })
+              }}>
+                <Text>Sign out</Text>
+              </TouchableOpacity>
+            )
+          })}
+        >
           { (props) => <HomeScreen {...props} text="Hello Home Screen" data={listData} /> }
         </Stack.Screen>
         <Stack.Screen name="Detail" component={DetailScreen} />
