@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
@@ -12,6 +12,15 @@ export const AuthScreen = ( props ) => {
   const [password, setPassword ] = useState(null)
 
   const navigation = useNavigation()
+
+  useEffect(() => {
+    if( props.loggedIn ) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home"}]
+      })
+    }
+  })
 
   const validateEmail = (email) => {
     if( email.indexOf('@') > 0 && email.indexOf('.') > 0 ) {
@@ -52,7 +61,7 @@ export const AuthScreen = ( props ) => {
         <TouchableOpacity 
           style={ !validEmail || !validPassword ? styles.buttonDisabled : styles.button }
           disabled={ !validEmail || !validPassword ? true : false }
-          onPress={ () => { props.signup(email,password) } }
+          onPress={ () => { props.signup('register',email,password) } }
         >
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
@@ -74,13 +83,20 @@ export const AuthScreen = ( props ) => {
       // login view
       <View style={styles.container}>
         <Text style={styles.title}>Sign In</Text>
-        <TextInput style={styles.input} placeholder="your email" /> 
+        <TextInput 
+          style={styles.input} placeholder="your email"
+          onChangeText = { (email) => { setEmail(email) }} 
+        /> 
         <TextInput 
           style={styles.input}
           placeholder="your password" 
           secureTextEntry={true}
+          onChangeText={ (password) => { setPassword(password) } }
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={ () => { props.signup('login', email, password ) } }
+        >
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
         <Text style={styles.altText}>Don't have an account?</Text>
