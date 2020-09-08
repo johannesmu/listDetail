@@ -88,11 +88,11 @@ export default function App() {
   firebase.auth().onAuthStateChanged( (user) => {
     if( user ) {
       setAuth(true)
-      console.log('user logged in')
+      // console.log('user logged in')
     }
     else {
       setAuth(false)
-      console.log('user not logged in')
+      // console.log('user not logged in')
     }
   } )
 

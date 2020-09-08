@@ -16,6 +16,8 @@ export const HomeScreen = (props) => {
   ]
 
   const [category,setCategory] = useState(null)
+  const [amount,setAmount] = useState(0)
+  const [note,setNote] = useState(null)
 
   const navigation = useNavigation()
 
@@ -36,16 +38,24 @@ export const HomeScreen = (props) => {
   return (
     <View style={homeStyle.container}>
       <View>
-        <TextInput style={homeStyle.input} placeholder="amount" />
+        <TextInput 
+        style={homeStyle.input} 
+        placeholder="amount" 
+        onChangeText={ (amount) => setAmount(amount) }
+        />
         <RNPickerSelect
           onValueChange={ (value) => setCategory(value) }
           items = { selectItems }
           useNativeAndroidPickerStyle={false}
         />
-        {/* <Picker style={{height: 50, width: 100}}>
-          <Picker.Item label="food" value="food" />
-          <Picker.Item label="bills" value="bills" />
-        </Picker> */}
+        <TextInput 
+          style={homeStyle.input} 
+          placeholder="notes" 
+          onChangeText={ (note) => setNote(note)}
+        />
+        <TouchableOpacity>
+          <Text>Add</Text>
+        </TouchableOpacity>
       </View>
       <FlatList
       data = {props.data}
