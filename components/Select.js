@@ -12,6 +12,7 @@ export const Select = (props) => {
         key={index} 
         onPress={()=> { 
           setSelected(item.value)
+          props.onSelect( item.value )
           setVisible(false) 
         }} 
       >
@@ -32,6 +33,7 @@ export const Select = (props) => {
       <Modal
         animationType="slide"
         visible = {visible}
+        transparent = {true}
       >
         <View style={selectStyles.modalView}>
           <ScrollView>
@@ -65,5 +67,6 @@ const selectStyles = StyleSheet.create({
   },
   modalView: {
     marginTop: 100,
+    backgroundColor: 'lightyellow',
   },
 })

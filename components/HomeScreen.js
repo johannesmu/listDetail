@@ -42,7 +42,7 @@ export const HomeScreen = (props) => {
         placeholder="amount" 
         onChangeText={ (amount) => setAmount(amount) }
         />
-        <Select items={selectItems} />
+        <Select items={selectItems} onSelect={setCategory} />
         <TextInput 
           style={homeStyle.input} 
           placeholder="notes" 
