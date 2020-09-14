@@ -3,15 +3,42 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Modal, Image } fr
 
 export const Select = (props) => {
   const [selected,setSelected] = useState('select category')
+  const [visible, setVisible] = useState(false)
+
+  const Items = props.items.map((item,index) => {
+    return (
+      <TouchableOpacity 
+        style={selectStyles.selectItem} 
+        key={index} 
+        onPress={()=> { 
+          setSelected(item.value)
+          setVisible(false) 
+        }} 
+      >
+        <Text>{item.label}</Text>
+      </TouchableOpacity>
+    )
+  })
+
   return (
     <View style={selectStyles.selectView}>
-      <TouchableOpacity >
+      <TouchableOpacity onPress={() => setVisible(true) } >
         <Text>{selected}</Text>
         <Image 
           style={selectStyles.selectImage} 
           source={require('../assets/chevron-circle-down-solid.png') } 
         />
       </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        visible = {visible}
+      >
+        <View style={selectStyles.modalView}>
+          <ScrollView>
+            {Items}
+          </ScrollView>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -29,5 +56,14 @@ const selectStyles = StyleSheet.create({
     position: 'absolute',
     right: 3,
     top: 3,
+  },
+  selectItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderBottomColor: '#dddddd',
+    borderBottomWidth: 1,
+  },
+  modalView: {
+    marginTop: 100,
   },
 })
