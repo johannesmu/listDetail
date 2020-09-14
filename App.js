@@ -18,10 +18,8 @@ import { DetailScreen } from './components/DetailScreen'
 import { AuthScreen } from './components/AuthScreen'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Data = []
-
 export default function App() {
-  const listData = Data
+  let listData = []
 
   const [auth,setAuth] = useState(false)
   const [dataRef,setDataRef] = useState(null)
@@ -49,10 +47,28 @@ export default function App() {
     firebase.database().ref(`${dataRef}/items/${item.id}`).set(dataObj)
   }
 
+  const readData = () => {
+    if(!dataRef) {
+      return
+    }
+    let data = []
+    firebase.database().ref(`${dataRef}/items`).on('value', (snapshot) => {
+      const dataObj = snapshot.val()
+      const keys = Object.keys( dataObj )
+      keys.forEach( (key) => {
+        let item = dataObj[key]
+        item.id = key
+        listData.push( item )
+      })
+      // listData = data
+    })
+  }
+
   firebase.auth().onAuthStateChanged( (user) => {
     if( user ) {
       setAuth(true)
       setDataRef(`users/${user.uid}`)
+      readData()
       // console.log('user logged in')
     }
     else {

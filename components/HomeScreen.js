@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Button, FlatList } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { TextInput } from 'react-native-gesture-handler'
@@ -13,6 +13,10 @@ export const HomeScreen = (props) => {
     {label: "Groceries", value: "groceries"},
     {label: "Bills", value: "bills"},
   ]
+
+  useEffect(()=>{
+    console.log(props.data)
+  })
 
   const [category,setCategory] = useState(null)
   const [amount,setAmount] = useState(0)
