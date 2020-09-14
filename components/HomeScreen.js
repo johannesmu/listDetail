@@ -25,6 +25,7 @@ export const HomeScreen = (props) => {
   const validateAmount = (amount) => {
     if( parseFloat(amount) ) {
       setValidAmount(true)
+      setAmount(amount)
     }
     else {
       setValidAmount(false)
