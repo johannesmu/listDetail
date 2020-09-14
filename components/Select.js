@@ -8,7 +8,9 @@ export const Select = (props) => {
   const [visible,setVisible] = useState(false)
 
   useEffect( () => {
-
+    if( props.reset ) {
+      setSelected(null)
+    }
   })
 
   const onSelect = ( value ) => {
@@ -19,13 +21,12 @@ export const Select = (props) => {
 
 
   const Items = props.items.map(( item, index ) => {
-    const id = new Date().getTime();
     return (
-      <TouchableOpacity style={selectStyles.item} onPress={() => {
+      <TouchableOpacity key={index} style={selectStyles.item} onPress={() => {
         onSelect(item.value)
       }}
       >
-        <Text key={id}>{item.label}</Text>
+        <Text >{item.label}</Text>
       </TouchableOpacity>
     )
   })
@@ -35,7 +36,7 @@ export const Select = (props) => {
   return (
     <View style={selectStyles.selectView}>
       <TouchableOpacity onPress={()=>{ setVisible(true) }}>
-        <Text>{ selected ? selected : 'select'}</Text>
+        <Text>{ selected ? selected : 'select category'}</Text>
       </TouchableOpacity>
       <Image source={ require('../assets/chevron-circle-down-solid.png') } style={selectStyles.selectImage}/>
       <Modal

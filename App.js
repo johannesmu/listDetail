@@ -26,6 +26,7 @@ export default function App() {
   const listData = Data
 
   const [auth,setAuth] = useState(false)
+  const [dataRef, setDataRef ] = useState(null)
 
   const register = (intent, email,password) => {
     if( intent == 'register'){
@@ -41,13 +42,31 @@ export default function App() {
   firebase.auth().onAuthStateChanged( (user) => {
     if( user ) {
       setAuth(true)
-      // console.log('user logged in')
+      setDataRef(`users/${user.uid}/items`)
+      readData()
     }
     else {
       setAuth(false)
       // console.log('user not logged in')
     }
   } )
+
+  const readData = () => {
+    if(dataRef) {
+      firebase.database().ref(dataRef).on('value', (snapshot) => {
+        // convert snapshot.val() object to array
+        console.log( snapshot.val() )
+      })
+    }
+  }
+
+  const addHandler = ( item ) => {
+    if(dataRef) {
+      const itemData = {amount: item.amount, note: item.note, category: item.category }
+      firebase.database().ref(`${dataRef}/${item.id}`).set(itemData)
+    }
+    
+  }
 
   return (
     <NavigationContainer>
@@ -71,7 +90,7 @@ export default function App() {
             )
           })}
         >
-          { (props) => <HomeScreen {...props} text="Hello Home Screen" data={listData} /> }
+          { (props) => <HomeScreen {...props} text="Hello Home Screen" data={listData} add={addHandler} /> }
         </Stack.Screen>
         <Stack.Screen name="Detail" component={DetailScreen} />
       </Stack.Navigator>

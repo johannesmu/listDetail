@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import {Select} from './Select'
@@ -14,12 +14,15 @@ export const HomeScreen = (props) => {
     {label: "Entertainment", value: "entertainment"},
     {label: "Fuel", value: "fuel"},
   ]
+  const _amountInput = useRef()
+  const _noteInput = useRef()
 
   const [category,setCategory] = useState(null)
   const [amount,setAmount] = useState(0)
   const [note,setNote] = useState(null)
 
   const [validAmount,setValidAmount] = useState(false)
+  const [reset,setReset] = useState(false)
 
   const navigation = useNavigation()
 
@@ -51,6 +54,14 @@ export const HomeScreen = (props) => {
     setCategory(val)
   }
 
+  const addItem = () => {
+    const itemId = new Date().getTime()
+    const itemAmount = amount
+    const itemCategory = category
+    const itemNote = note
+    props.add({id: itemId, amount: itemAmount, category: itemCategory, note: itemNote })
+  }
+
   useEffect( () => {
     
   })
@@ -59,17 +70,23 @@ export const HomeScreen = (props) => {
     <View style={homeStyle.container}>
       <View>
         <TextInput 
-        style={homeStyle.input} 
-        placeholder="amount" 
-        onChangeText={ (amount) => validateAmount(amount) }
+          style={homeStyle.input} 
+          placeholder="amount" 
+          onChangeText={ (amount) => validateAmount(amount) }
+          inputRef = {_amountInput}
         />        
-        <Select items={selectItems} onselect={categorise} />
+        <Select items={selectItems} onselect={categorise} reset={reset} />
         <TextInput 
           style={homeStyle.input} 
           placeholder="notes" 
           onChangeText={ (note) => setNote(note)}
+          
         />
-        <TouchableOpacity style={ validAmount ? homeStyle.button : homeStyle.buttonDisabled }>
+        <TouchableOpacity 
+          style={ validAmount && category ? homeStyle.button : homeStyle.buttonDisabled }
+          disabled={ validAmount && category ? false: true }
+          onPress={ () => { addItem() }}
+        >
           <Text style={homeStyle.buttonText}>Add</Text>
         </TouchableOpacity>
       </View>
