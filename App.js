@@ -18,61 +18,13 @@ import { DetailScreen } from './components/DetailScreen'
 import { AuthScreen } from './components/AuthScreen'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Data = [
-  {
-    "amount": 50,
-    "category": "food",
-    "id": "1598241633",
-    "note": "buying lunch"
-  },
-  {
-    "amount": 20,
-    "category": "transport",
-    "id": "1598241768",
-    "note": "catching train"
-  },
-  {
-    "amount": 80,
-    "category": "groceries",
-    "id": "1598241782",
-    "note": "shopping at Coles"
-  },
-  {
-    "amount": 13,
-    "category": "food",
-    "id": "1598241795",
-    "note": "snack time"
-  },
-  {
-    "amount": 35,
-    "category": "entertainment",
-    "id": "1598241806",
-    "note": "buying Untitled Goose"
-  },
-  {
-    "amount": 350,
-    "category": "rent",
-    "id": "1598241817",
-    "note": "weeks rent"
-  },
-  {
-    "amount": 60,
-    "category": "transport",
-    "id": "1598241827",
-    "note": "topping up Opal card"
-  },
-  {
-    "amount": 30,
-    "category": "food",
-    "id": "1598241841",
-    "note": "buying dinner"
-  }
-]
+const Data = []
 
 export default function App() {
   const listData = Data
 
   const [auth,setAuth] = useState(false)
+  const [dataRef,setDataRef] = useState(null)
 
   const register = (intent, email,password) => {
     if( intent == 'register'){
@@ -85,13 +37,27 @@ export default function App() {
     }
   }
 
+  const addData = (item) => {
+    if( !dataRef ) {
+      return;
+    }
+    const dataObj = { 
+      amount: item.amount,
+      note: item.note,
+      category: item.category
+    }
+    firebase.database().ref(`${dataRef}/items/${item.id}`).set(dataObj)
+  }
+
   firebase.auth().onAuthStateChanged( (user) => {
     if( user ) {
       setAuth(true)
+      setDataRef(`users/${user.uid}`)
       // console.log('user logged in')
     }
     else {
       setAuth(false)
+      setDataRef(null)
       // console.log('user not logged in')
     }
   } )
@@ -118,7 +84,11 @@ export default function App() {
             )
           })}
         >
-          { (props) => <HomeScreen {...props} text="Hello Home Screen" data={listData} /> }
+          { (props) => <HomeScreen {...props} 
+          text="Hello Home Screen" 
+          data={listData}
+          add={addData}
+           /> }
         </Stack.Screen>
         <Stack.Screen name="Detail" component={DetailScreen} />
       </Stack.Navigator>

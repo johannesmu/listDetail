@@ -18,7 +18,31 @@ export const HomeScreen = (props) => {
   const [amount,setAmount] = useState(0)
   const [note,setNote] = useState(null)
 
+  const [validAmount,setValidAmount] = useState(false)
+
   const navigation = useNavigation()
+
+  const validateAmount = (amount) => {
+    if( parseFloat(amount) ) {
+      setValidAmount(true)
+    }
+    else {
+      setValidAmount(false)
+    }
+  }
+
+  const addItem = () => {
+    const itemId = new Date().getTime()
+    const itemAmount = amount
+    const itemCategory = category
+    const itemNote = note
+    props.add({
+      id: itemId,
+      amount: itemAmount,
+      category: itemCategory,
+      note: itemNote
+    })
+  }
 
   const renderList = ({item}) => (
     <ListItem 
@@ -40,7 +64,7 @@ export const HomeScreen = (props) => {
         <TextInput 
         style={homeStyle.input} 
         placeholder="amount" 
-        onChangeText={ (amount) => setAmount(amount) }
+        onChangeText={ (amount) => validateAmount(amount) }
         />
         <Select items={selectItems} onSelect={setCategory} />
         <TextInput 
@@ -48,8 +72,12 @@ export const HomeScreen = (props) => {
           placeholder="notes" 
           onChangeText={ (note) => setNote(note)}
         />
-        <TouchableOpacity>
-          <Text>Add</Text>
+        <TouchableOpacity 
+          style={ validAmount && category ? homeStyle.button : homeStyle.buttonDisabled }
+          disabled={ validAmount && category ? false : true }
+          onPress={ () => { addItem() } }
+        >
+          <Text style={homeStyle.buttonText}>Add</Text>
         </TouchableOpacity>
       </View>
       <FlatList
@@ -92,5 +120,19 @@ const homeStyle = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#ffffff',
     marginVertical: 15,
+  },
+  button: {
+    backgroundColor: '#33ffcc',
+    padding: 10,
+    borderRadius: 10,
+  },
+  buttonDisabled: {
+    backgroundColor: '#c0f9eb',
+    padding: 10,
+    borderRadius: 10,
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: '#333333',
   },
 })
