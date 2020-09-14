@@ -1,8 +1,6 @@
-import React, {useState} from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Button, FlatList, TextInput } from 'react-native'
+import React, {useEffect, useState} from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import RNPickerSelect from 'react-native-picker-select'
-// import {Picker} from '@react-native-community/picker'
 import {Select} from './Select'
 
 
@@ -13,11 +11,15 @@ export const HomeScreen = (props) => {
     {label: "Transport", value: "transport"},
     {label: "Groceries", value: "groceries"},
     {label: "Bills", value: "bills"},
+    {label: "Entertainment", value: "entertainment"},
+    {label: "Fuel", value: "fuel"},
   ]
 
   const [category,setCategory] = useState(null)
   const [amount,setAmount] = useState(0)
   const [note,setNote] = useState(null)
+
+  const [validAmount,setValidAmount] = useState(false)
 
   const navigation = useNavigation()
 
@@ -35,27 +37,40 @@ export const HomeScreen = (props) => {
     navigation.navigate("Detail", item )
   }
 
+  const validateAmount = (amount) => {
+    if(parseFloat(amount)) {
+      setValidAmount(true)
+      setAmount(amount)
+    }
+    else{
+      setValidAmount(false)
+    }
+  }
+
+  const categorise = ( val ) => {
+    setCategory(val)
+  }
+
+  useEffect( () => {
+    
+  })
+
   return (
     <View style={homeStyle.container}>
       <View>
         <TextInput 
         style={homeStyle.input} 
         placeholder="amount" 
-        onChangeText={ (amount) => setAmount(amount) }
-        />
-        {/* <RNPickerSelect
-          onValueChange={ (value) => setCategory(value) }
-          items = { selectItems }
-          useNativeAndroidPickerStyle={false}
-        /> */}
-        <Select items={selectItems} />
+        onChangeText={ (amount) => validateAmount(amount) }
+        />        
+        <Select items={selectItems} onselect={categorise} />
         <TextInput 
           style={homeStyle.input} 
           placeholder="notes" 
           onChangeText={ (note) => setNote(note)}
         />
-        <TouchableOpacity>
-          <Text>Add</Text>
+        <TouchableOpacity style={ validAmount ? homeStyle.button : homeStyle.buttonDisabled }>
+          <Text style={homeStyle.buttonText}>Add</Text>
         </TouchableOpacity>
       </View>
       <FlatList
@@ -98,5 +113,19 @@ const homeStyle = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#ffffff',
     marginVertical: 15,
+  },
+  button: {
+    backgroundColor: 'lightblue',
+    padding: 10,
+    borderRadius: 10,
+  },
+  buttonDisabled: {
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 10,
+    opacity: 0.5,
+  },
+  buttonText: {
+    textAlign: 'center',
   },
 })
