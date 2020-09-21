@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer, StackActions } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -19,10 +19,13 @@ import { AuthScreen } from './components/AuthScreen'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function App() {
-  let listData = []
 
   const [auth,setAuth] = useState(false)
   const [dataRef,setDataRef] = useState(null)
+  // const [listData, setListData] = useState([])
+  const [updating,setUpdating] = useState(false)
+  
+  let listData = []
 
   const register = (intent, email,password) => {
     if( intent == 'register'){
@@ -44,39 +47,39 @@ export default function App() {
       note: item.note,
       category: item.category
     }
-    firebase.database().ref(`${dataRef}/items/${item.id}`).set(dataObj)
+    firebase.database().ref(`${dataRef}/items/${item.id}`).set(dataObj, () => {
+      // update state for rendering of list
+      setUpdating(false)
+    })
   }
 
-  const readData = () => {
-    if(!dataRef) {
-      return
-    }
-    let data = []
-    firebase.database().ref(`${dataRef}/items`).on('value', (snapshot) => {
-      const dataObj = snapshot.val()
-      const keys = Object.keys( dataObj )
+  // listen for data changes
+  const db = firebase.database().ref(`${dataRef}/items`)
+  db.on('value', (snapshot) => {
+    const dataObj = snapshot.val()
+    if(dataObj) {
+      let keys = Object.keys(dataObj)
+      listData = []
       keys.forEach( (key) => {
         let item = dataObj[key]
         item.id = key
-        listData.push( item )
+        listData.push(item)
       })
-      // listData = data
-    })
-  }
+    }
+  })
 
   firebase.auth().onAuthStateChanged( (user) => {
     if( user ) {
       setAuth(true)
       setDataRef(`users/${user.uid}`)
-      readData()
-      // console.log('user logged in')
     }
     else {
       setAuth(false)
       setDataRef(null)
-      // console.log('user not logged in')
     }
   } )
+
+  
 
   return (
     <NavigationContainer>
@@ -104,6 +107,7 @@ export default function App() {
           text="Hello Home Screen" 
           data={listData}
           add={addData}
+          extra={updating}
            /> }
         </Stack.Screen>
         <Stack.Screen name="Detail" component={DetailScreen} />
