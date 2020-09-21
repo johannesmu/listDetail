@@ -27,7 +27,6 @@ export default function App() {
 
   useEffect(() => {
     readData()
-    // setUpdating(true)
   })
   
   let listData = []
@@ -63,7 +62,6 @@ export default function App() {
     if(!dataRef) {
       return
     }
-    setUpdating(false)
     firebase.database().ref(`${dataRef}/items`).once('value')
     .then((snapshot) => {
       let data = snapshot.val()
@@ -75,9 +73,11 @@ export default function App() {
           item.id = key
           listData.push(item)
         })
+        setUpdating(true)
       }
     })
-    setUpdating(true)
+    
+    
   }
 
   const updateData = (item) => {

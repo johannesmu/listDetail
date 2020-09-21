@@ -87,6 +87,7 @@ export const HomeScreen = (props) => {
         data = {props.data}
         renderItem = {renderList} 
         keyExtractor = { item => item.id }
+        extraData = {props.extra}
       />
     </View>
   )
