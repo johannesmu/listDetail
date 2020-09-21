@@ -25,9 +25,9 @@ export default function App() {
   // const [listData, setListData] = useState([])
   const [updating,setUpdating] = useState(false)
 
-  useEffect(()=> {
-    setUpdating(true)
+  useEffect(() => {
     readData()
+    // setUpdating(true)
   })
   
   let listData = []
@@ -47,6 +47,7 @@ export default function App() {
     if( !dataRef ) {
       return;
     }
+    setUpdating(false)
     const dataObj = { 
       amount: item.amount,
       note: item.note,
@@ -62,6 +63,7 @@ export default function App() {
     if(!dataRef) {
       return
     }
+    setUpdating(false)
     firebase.database().ref(`${dataRef}/items`).once('value')
     .then((snapshot) => {
       let data = snapshot.val()
@@ -74,6 +76,15 @@ export default function App() {
           listData.push(item)
         })
       }
+    })
+    setUpdating(true)
+  }
+
+  const updateData = (item) => {
+    const data = {amount: item.amount,note: item.note, category: item.category }
+    firebase.database().ref(`${dataRef}/items/${item.id}`).update( data )
+    .then(() => {
+      // data is updated
     })
   }
 
@@ -132,7 +143,9 @@ export default function App() {
           extra={updating}
            /> }
         </Stack.Screen>
-        <Stack.Screen name="Detail" component={DetailScreen} />
+        <Stack.Screen name="Detail">
+          { (props) => <DetailScreen {...props} update={updateData} /> }
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
