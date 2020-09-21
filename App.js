@@ -24,6 +24,11 @@ export default function App() {
   const [dataRef,setDataRef] = useState(null)
   // const [listData, setListData] = useState([])
   const [updating,setUpdating] = useState(false)
+
+  useEffect(()=> {
+    setUpdating(true)
+    readData()
+  })
   
   let listData = []
 
@@ -49,7 +54,26 @@ export default function App() {
     }
     firebase.database().ref(`${dataRef}/items/${item.id}`).set(dataObj, () => {
       // update state for rendering of list
-      setUpdating(false)
+      setUpdating(true)
+    })
+  }
+
+  const readData = () => {
+    if(!dataRef) {
+      return
+    }
+    firebase.database().ref(`${dataRef}/items`).once('value')
+    .then((snapshot) => {
+      let data = snapshot.val()
+      if(data) {
+        let keys = Object.keys(data)
+        listData = []
+        keys.forEach((key) => {
+          let item = data[key]
+          item.id = key
+          listData.push(item)
+        })
+      }
     })
   }
 
@@ -78,8 +102,6 @@ export default function App() {
       setDataRef(null)
     }
   } )
-
-  
 
   return (
     <NavigationContainer>
@@ -135,3 +157,4 @@ const styles = StyleSheet.create({
     color: '#eeeeee'
   },
 });
+
