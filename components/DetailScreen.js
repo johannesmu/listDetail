@@ -1,10 +1,13 @@
 import React, {useState, useEffect} from 'react'
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { DateFormat } from './DateFormat'
 
 export const DetailScreen = ( props ) => {
   const [amount,setAmount] = useState(props.route.params.amount)
   const [editing,setEditing] = useState(false)
+
+  const navigation = useNavigation()
 
   return (
     <View>
@@ -18,11 +21,32 @@ export const DetailScreen = ( props ) => {
       />
       <Button 
         title={ editing? "save" : "edit" } 
-        onPress={ () => { editing ? setEditing(false) : setEditing(true) } } 
+        onPress={ () => { 
+          if( editing ) {
+            setEditing(false)
+            let item = {
+              amount: amount,
+              note: props.route.params.note,
+              category: props.route.params.category,
+              id: props.route.params.id
+            }
+            props.update( item )
+          }
+          else {
+            setEditing(true) 
+          }
+        } } 
       />
       <DateFormat date={props.route.params.id} styling={styles.date} />
-      <Text>category: {props.route.params.category}</Text>
-      <Text>note: {props.route.params.note}</Text>
+      <Text style={styles.date}>{props.route.params.category}</Text>
+      <Text style={styles.date}>{props.route.params.note}</Text>
+      <Button 
+        title="Delete" 
+        onPress={ () => { 
+          props.delete(props.route.params.id) 
+          navigation.goBack()
+        }}
+      />
     </View>
   )
 }

@@ -81,10 +81,20 @@ export default function App() {
   }
 
   const updateData = (item) => {
+    setUpdating(false)
     const data = {amount: item.amount,note: item.note, category: item.category }
     firebase.database().ref(`${dataRef}/items/${item.id}`).update( data )
     .then(() => {
       // data is updated
+      setUpdating(true)
+    })
+  }
+
+  const deleteData = (id) => {
+    setUpdating(false)
+    firebase.database().ref(`${dataRef}/items/${id}`).remove()
+    .then( () => {
+      setUpdating(true)
     })
   }
 
@@ -144,7 +154,7 @@ export default function App() {
            /> }
         </Stack.Screen>
         <Stack.Screen name="Detail">
-          { (props) => <DetailScreen {...props} update={updateData} /> }
+          { (props) => <DetailScreen {...props} update={updateData} delete={deleteData} /> }
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
