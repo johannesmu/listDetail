@@ -10,6 +10,11 @@ export const AuthScreen = ( props ) => {
   // hooks for user credentials
   const [email,setEmail] = useState(null)
   const [password, setPassword ] = useState(null)
+  // variables for input refs
+  let _loginEmail = null
+  let _loginPassword = null
+  let _regEmail = null
+  let _regPassword = null
 
   const navigation = useNavigation()
 
@@ -42,6 +47,21 @@ export const AuthScreen = ( props ) => {
     }
   }
 
+  const clearInputs = () => {
+    if(_regEmail) {
+      _regEmail.clear()
+    }
+    if(_regPassword) {
+      _regPassword.clear()
+    }
+    if(_loginEmail) {
+      _loginEmail.clear()
+    }
+    if(_loginPassword) {
+      _loginPassword.clear()
+    }
+  }
+
   if (!login) {
     return (
       // register view
@@ -51,17 +71,22 @@ export const AuthScreen = ( props ) => {
           style={styles.input} 
           placeholder="you@email.com"
           onChangeText={ (email) => validateEmail(email) } 
+          ref={ component => _regEmail = component }
         /> 
         <TextInput 
           style={styles.input}
           placeholder="min 8 characters" 
           secureTextEntry={true}
           onChangeText={ (password) => validatePassword(password) }
+          ref={ component => _regPassword = component }
         />
         <TouchableOpacity 
           style={ !validEmail || !validPassword ? styles.buttonDisabled : styles.button }
           disabled={ !validEmail || !validPassword ? true : false }
-          onPress={ () => { props.signup('register',email,password) } }
+          onPress={ () => { 
+            props.signup('register',email,password) 
+            clearInputs()
+          } }
         >
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
@@ -70,6 +95,7 @@ export const AuthScreen = ( props ) => {
           style={styles.altButton}
           onPress={ () => { 
             setLogin(true) 
+            clearInputs()
             navigation.setOptions({title: 'Sign in'})
           } }
         >
@@ -86,16 +112,21 @@ export const AuthScreen = ( props ) => {
         <TextInput 
           style={styles.input} placeholder="your email"
           onChangeText = { (email) => { setEmail(email) }} 
+          ref={ component => _loginEmail = component }
         /> 
         <TextInput 
           style={styles.input}
           placeholder="your password" 
           secureTextEntry={true}
           onChangeText={ (password) => { setPassword(password) } }
+          ref={ component => _loginPassword = component }
         />
         <TouchableOpacity 
           style={styles.button}
-          onPress={ () => { props.signup('login', email, password ) } }
+          onPress={ () => { 
+            props.signup('login', email, password ) 
+            clearInputs()
+          } }
         >
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
@@ -104,6 +135,7 @@ export const AuthScreen = ( props ) => {
           style={styles.altButton}
           onPress={ () => { 
             setLogin(false) 
+            clearInputs()
             navigation.setOptions({title: 'Register'})
           } }
         >
