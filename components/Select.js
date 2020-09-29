@@ -1,50 +1,58 @@
-import React, {useState, useEffect} from 'react'
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Modal, Image } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Modal, Image } from 'react-native'
 
 export const Select = (props) => {
-  const [selected,setSelected] = useState('select item')
+  const [selected, setSelected] = useState('select item')
   const [visible, setVisible] = useState(false)
+  const [addNew, setAddNew] = useState(false)
 
   useEffect(() => {
-    console.log(props.items)
+
   })
-  
-  const Items = props.items.map((item,index) => {
+
+  const Items = props.items.map((item, index) => {
     return (
-      <TouchableOpacity 
-        style={ item.value == selected ? selectStyles.active : selectStyles.selectItem } 
-        key={index} 
-        onPress={()=> { 
+      <TouchableOpacity
+        style={item.value == selected ? selectStyles.active : selectStyles.selectItem}
+        key={index}
+        onPress={() => {
           setSelected(item.value)
-          props.onSelect( item.value )
-          setVisible(false) 
-        }} 
+          props.onSelect(item.value)
+          setVisible(false)
+          setAddNew(false)
+        }}
       >
-        <Text style={ item.value == selected ? selectStyles.activeText: ''} >{item.label}</Text>
+        <Text style={item.value == selected ? selectStyles.activeText : ''} >{item.label}</Text>
       </TouchableOpacity>
     )
   })
 
   return (
     <View style={selectStyles.selectView}>
-      <TouchableOpacity onPress={() => setVisible(true) } >
+      <TouchableOpacity onPress={() => setVisible(true)} >
         <Text>{selected}</Text>
-        <Image 
-          style={selectStyles.selectImage} 
-          source={require('../assets/chevron-circle-down-solid.png') } 
+        <Image
+          style={selectStyles.selectImage}
+          source={require('../assets/chevron-circle-down-solid.png')}
         />
       </TouchableOpacity>
       <Modal
         animationType="slide"
-        visible = {visible}
-        transparent = {true}
+        visible={visible}
+        transparent={true}
       >
         <View style={selectStyles.modalView}>
           <ScrollView>
             {Items}
+            <TextInput 
+              style={[ selectStyles.newInput,{ display: addNew ? 'flex' : 'none' }]} 
+              placeholder="new category name" 
+            />
           </ScrollView>
-          <TouchableOpacity>
-            <Text>add new category</Text>
+          <TouchableOpacity style={selectStyles.new} onPress={()=>{ setAddNew( addNew ? false: true) }}>
+            <Text style={selectStyles.newText}>
+              { addNew ? 'Save' : 'Add a new category'}
+            </Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -84,6 +92,23 @@ const selectStyles = StyleSheet.create({
   },
   modalView: {
     marginTop: 100,
-    backgroundColor: 'lightyellow',
+    backgroundColor: 'white',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  new: {
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    backgroundColor: '#33ffcc',
+  },
+  newText: {
+    textAlign: 'center',
+  },
+  newInput: {
+    borderWidth: 1,
+    borderColor: '#cccccc',
+    paddingVertical: 10,
+    paddingHorizontal: 5,
   },
 })

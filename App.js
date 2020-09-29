@@ -136,7 +136,7 @@ export default function App() {
     .then((snapshot) => {
       let dataObj = snapshot.val()
       let keys = Object.keys(dataObj)
-      let cats = []
+      
       keys.forEach( (key) => {
         let catItem = dataObj[key]
         catItem.id = key
