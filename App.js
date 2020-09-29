@@ -13,6 +13,7 @@ if ( !firebase.apps.length ){
   firebase.initializeApp( firebaseConfig )
 }
 
+import { SplashScreen } from './components/SplashScreen'
 import { HomeScreen } from './components/HomeScreen'
 import { DetailScreen } from './components/DetailScreen'
 import { AuthScreen } from './components/AuthScreen'
@@ -22,7 +23,6 @@ export default function App() {
 
   const [auth,setAuth] = useState(false)
   const [dataRef,setDataRef] = useState(null)
-  // const [listData, setListData] = useState([])
   const [updating,setUpdating] = useState(false)
 
   useEffect(() => {
@@ -118,6 +118,7 @@ export default function App() {
       setDataRef(null)
     }
   } )
+
   // register or login user
   const register = (intent, email,password) => {
     if( intent == 'register'){
@@ -148,6 +149,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="Splash" options={{headerShown: false}}>
+          { (props) => <SplashScreen {...props} loggedIn={firebase.auth()} /> }
+        </Stack.Screen>
         <Stack.Screen name="Register">
           { (props) => <AuthScreen {...props} signup={ register } loggedIn={auth} /> }
         </Stack.Screen>
