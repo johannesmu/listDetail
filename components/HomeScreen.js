@@ -7,14 +7,12 @@ import { Select } from './Select'
 
 
 export const HomeScreen = (props) => {
-  // const selectItems = [
-  //   {label: "Food", value: "food"},
-  //   {label: "Transport", value: "transport"},
-  //   {label: "Groceries", value: "groceries"},
-  //   {label: "Bills", value: "bills"},
-  // ]
+  // receive categories as props
   let selectItems = props.categories
-
+  // set variables for reference (to clear TextInput)
+  // see ref props in amount and note
+  let _amount = null;
+  let _note = null;
 
   const [category,setCategory] = useState(null)
   const [amount,setAmount] = useState(0)
@@ -45,6 +43,8 @@ export const HomeScreen = (props) => {
       category: itemCategory,
       note: itemNote
     })
+    _amount.clear()
+    _note.clear()
   }
 
   const renderList = ({item}) => (
@@ -69,12 +69,14 @@ export const HomeScreen = (props) => {
           placeholder="amount" 
           onChangeText={ (amount) => validateAmount(amount) }
           keyboardType='decimal-pad'
+          ref={component=> _amount = component }
         />
         <Select items={selectItems} onSelect={setCategory} />
         <TextInput 
           style={homeStyle.input} 
           placeholder="notes" 
           onChangeText={ (note) => setNote(note)}
+          ref={component => _note = component }
         />
         <TouchableOpacity 
           style={ validAmount && category ? homeStyle.button : homeStyle.buttonDisabled }
