@@ -7,12 +7,13 @@ import { Select } from './Select'
 
 
 export const HomeScreen = (props) => {
-  const selectItems = [
-    {label: "Food", value: "food"},
-    {label: "Transport", value: "transport"},
-    {label: "Groceries", value: "groceries"},
-    {label: "Bills", value: "bills"},
-  ]
+  // const selectItems = [
+  //   {label: "Food", value: "food"},
+  //   {label: "Transport", value: "transport"},
+  //   {label: "Groceries", value: "groceries"},
+  //   {label: "Bills", value: "bills"},
+  // ]
+  let selectItems = props.categories
 
 
   const [category,setCategory] = useState(null)

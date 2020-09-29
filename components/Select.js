@@ -1,14 +1,18 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Modal, Image } from 'react-native'
 
 export const Select = (props) => {
-  const [selected,setSelected] = useState(props.default ? props.default : 'select category')
+  const [selected,setSelected] = useState('select item')
   const [visible, setVisible] = useState(false)
 
+  useEffect(() => {
+    console.log(props.items)
+  })
+  
   const Items = props.items.map((item,index) => {
     return (
       <TouchableOpacity 
-        style={selectStyles.selectItem} 
+        style={ item.value == selected ? selectStyles.active : selectStyles.selectItem } 
         key={index} 
         onPress={()=> { 
           setSelected(item.value)
@@ -16,7 +20,7 @@ export const Select = (props) => {
           setVisible(false) 
         }} 
       >
-        <Text>{item.label}</Text>
+        <Text style={ item.value == selected ? selectStyles.activeText: ''} >{item.label}</Text>
       </TouchableOpacity>
     )
   })
@@ -39,6 +43,9 @@ export const Select = (props) => {
           <ScrollView>
             {Items}
           </ScrollView>
+          <TouchableOpacity>
+            <Text>add new category</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>
@@ -64,6 +71,16 @@ const selectStyles = StyleSheet.create({
     paddingHorizontal: 5,
     borderBottomColor: '#dddddd',
     borderBottomWidth: 1,
+  },
+  active: {
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderBottomColor: '#dddddd',
+    borderBottomWidth: 1,
+    backgroundColor: 'black',
+  },
+  activeText: {
+    color: 'white',
   },
   modalView: {
     marginTop: 100,

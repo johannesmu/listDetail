@@ -26,22 +26,18 @@ export default function App() {
   const [updating,setUpdating] = useState(false)
 
   useEffect(() => {
+    // get user's items
     readData()
+    // get default categories
+    getDefaultCategories()
   })
   
   let listData = []
 
-  const register = (intent, email,password) => {
-    if( intent == 'register'){
-      firebase.auth().createUserWithEmailAndPassword( email, password )
-      .catch( error => console.log(error) )
-    }
-    else if( intent == 'login' ) {
-      firebase.auth().signInWithEmailAndPassword( email, password )
-      .catch( error => console.log(error) )
-    }
-  }
+  let categoryItems = []
 
+  
+  // user's items
   const addData = (item) => {
     if( !dataRef ) {
       return;
@@ -76,8 +72,6 @@ export default function App() {
         setUpdating(true)
       }
     })
-    
-    
   }
 
   const updateData = (item) => {
@@ -113,6 +107,7 @@ export default function App() {
     }
   })
 
+  // listen for auth changes
   firebase.auth().onAuthStateChanged( (user) => {
     if( user ) {
       setAuth(true)
@@ -123,6 +118,32 @@ export default function App() {
       setDataRef(null)
     }
   } )
+  // register or login user
+  const register = (intent, email,password) => {
+    if( intent == 'register'){
+      firebase.auth().createUserWithEmailAndPassword( email, password )
+      .catch( error => console.log(error) )
+    }
+    else if( intent == 'login' ) {
+      firebase.auth().signInWithEmailAndPassword( email, password )
+      .catch( error => console.log(error) )
+    }
+  }
+
+  // default categories
+  const getDefaultCategories = () => {
+    firebase.database().ref('categories').once('value')
+    .then((snapshot) => {
+      let dataObj = snapshot.val()
+      let keys = Object.keys(dataObj)
+      let cats = []
+      keys.forEach( (key) => {
+        let catItem = dataObj[key]
+        catItem.id = key
+        categoryItems.push(catItem)
+      } )
+    })
+  }
 
   return (
     <NavigationContainer>
@@ -151,6 +172,7 @@ export default function App() {
           data={listData}
           add={addData}
           extra={updating}
+          categories={categoryItems}
            /> }
         </Stack.Screen>
         <Stack.Screen name="Detail">
