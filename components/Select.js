@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Modal, Image } from 'react-native'
 
 export const Select = (props) => {
-  const [selected,setSelected] = useState('select category')
+  const [selected,setSelected] = useState(props.default ? props.default : 'select category')
   const [visible, setVisible] = useState(false)
 
   const Items = props.items.map((item,index) => {
