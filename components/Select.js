@@ -85,16 +85,16 @@ const selectStyles = StyleSheet.create({
     paddingHorizontal: 5,
     borderBottomColor: '#dddddd',
     borderBottomWidth: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#33ffcc',
   },
   activeText: {
-    color: 'white',
+    color: '#333333',
   },
   modalView: {
-    marginTop: 100,
     backgroundColor: 'white',
     position: 'absolute',
-    bottom: 0,
+    bottom: 20,
+    top: 20,
     width: '100%',
   },
   new: {
