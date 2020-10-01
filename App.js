@@ -181,7 +181,11 @@ export default function App() {
            /> }
         </Stack.Screen>
         <Stack.Screen name="Detail">
-          { (props) => <DetailScreen {...props} update={updateData} delete={deleteData} /> }
+          { (props) => <DetailScreen {...props} 
+            update={updateData} 
+            delete={deleteData} 
+            categories={categoryItems}
+          /> }
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
