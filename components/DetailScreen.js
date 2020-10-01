@@ -23,6 +23,10 @@ export const DetailScreen = (props) => {
   // variables for fields ref
   let _amountRef = null
 
+  useEffect(() => {
+    // console.log('effect')
+  })
+
   const resetValues = () => {
     setAmount(props.route.params.amount)
     setNote(props.route.params.note)
@@ -51,7 +55,8 @@ export const DetailScreen = (props) => {
         <DateFormat date={props.route.params.id} styling={styles.date} />
       </View>
       <Text style={styles.textCenter}>in category</Text>
-      <Text style={styles.date}>{props.route.params.category}</Text>
+      <Text style={styles.date}>{category}</Text>
+      <Select items={props.categories} onSelect={setCategory} default={category} />
       <Text style={styles.textCenter}>with note</Text>
 
       <TextInput 
@@ -114,6 +119,7 @@ export const DetailScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginHorizontal: 15,
   },
   detailTitle: {
     textAlign: 'center',

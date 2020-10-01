@@ -2,21 +2,23 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Modal, Image } from 'react-native'
 
 export const Select = (props) => {
-  const [selected, setSelected] = useState('select item')
+  const [selected, setSelected] = useState( props.default ? props.default : 'select item')
   const [visible, setVisible] = useState(false)
   const [addNew, setAddNew] = useState(false)
+  const [pressed, setPressed] = useState(false)
 
   useEffect(() => {
-
+    setSelected(props.default)
   })
 
   const Items = props.items.map((item, index) => {
     return (
       <TouchableOpacity
-        style={item.value == selected ? selectStyles.active : selectStyles.selectItem}
+        style={[item.value == selected ? selectStyles.active : selectStyles.selectItem]}
         key={index}
         onPress={() => {
           setSelected(item.value)
+          setPressed(true)
           props.onSelect(item.value)
           setVisible(false)
           setAddNew(false)
@@ -29,7 +31,9 @@ export const Select = (props) => {
 
   return (
     <View style={selectStyles.selectView}>
-      <TouchableOpacity onPress={() => setVisible(true)} >
+      <TouchableOpacity onPress={() => {
+        setVisible(true)
+        }} >
         <Text>{selected}</Text>
         <Image
           style={selectStyles.selectImage}
