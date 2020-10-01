@@ -149,6 +149,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* splash screen is added to check if the user is logged in, so the user does not see a flash of the auth screen */}
         <Stack.Screen name="Splash" options={{headerShown: false}}>
           { (props) => <SplashScreen {...props} loggedIn={firebase.auth()} /> }
         </Stack.Screen>
