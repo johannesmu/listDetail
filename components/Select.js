@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Modal, Image } from 'react-native'
 
 export const Select = (props) => {
-  const [selected, setSelected] = useState( props.default ? props.default : 'select item')
+  const [selected, setSelected] = useState( props.default )
   const [visible, setVisible] = useState(false)
   const [addNew, setAddNew] = useState(false)
   const [pressed, setPressed] = useState(false)
 
   useEffect(() => {
-    setSelected(props.default)
+  //setSelected(props.default)
   })
 
   const Items = props.items.map((item, index) => {
@@ -46,6 +46,12 @@ export const Select = (props) => {
         transparent={true}
       >
         <View style={selectStyles.modalView}>
+          <View style={selectStyles.modalHeader}>
+            <Text style={selectStyles.modalTitle}>Select a category</Text>
+            <TouchableOpacity onPress={()=> {setVisible(false)}}>
+              <Image style={selectStyles.modalHeaderButton} source={require('../assets/times-solid.png')} />
+            </TouchableOpacity>
+          </View>
           <ScrollView>
             {Items}
             <TextInput 
@@ -97,9 +103,23 @@ const selectStyles = StyleSheet.create({
   modalView: {
     backgroundColor: 'white',
     position: 'absolute',
-    bottom: 20,
-    top: 20,
+    bottom: 0,
+    top: 0,
     width: '100%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  modalHeaderButton: {
+    width: 30,
+    height: 30,
+  },
+  modalTitle: {
+    paddingVertical: 15,
+    paddingHorizontal: 5,
+    fontSize: 18,
   },
   new: {
     paddingHorizontal: 10,

@@ -33,6 +33,11 @@ export const DetailScreen = (props) => {
     setCategory(props.route.params.category)
   }
 
+  const changeCategory = (value) => {
+    setEdited(true)
+    setCategory(value)
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.detailTitle}>You spent </Text>
@@ -55,12 +60,13 @@ export const DetailScreen = (props) => {
         <DateFormat date={props.route.params.id} styling={styles.date} />
       </View>
       <Text style={styles.textCenter}>in category</Text>
-      <Text style={styles.date}>{category}</Text>
-      <Select items={props.categories} onSelect={setCategory} default={category} />
+      <View style={styles.categoryView}>
+        <Select items={props.categories} onSelect={changeCategory} default={category} />
+      </View>
       <Text style={styles.textCenter}>with note</Text>
 
       <TextInput 
-      style={[styles.textCenter]} 
+      style={[styles.textCenter, styles.noteInput]} 
       value={note} 
       onChangeText={(text) => {
         setEdited(true)
@@ -120,6 +126,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 15,
+    alignItems: 'center',
   },
   detailTitle: {
     textAlign: 'center',
@@ -147,6 +154,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '700',
     marginHorizontal: 5,
+  },
+  categoryView: {
+    width: 280,
+    marginVertical: 15,
+  },
+  noteInput: {
+    width: 280,
+    marginVertical: 15,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#cccccc',
   },
   row: {
     flexDirection: 'row',
