@@ -71,7 +71,7 @@ export const HomeScreen = (props) => {
           keyboardType='decimal-pad'
           ref={component=> _amount = component }
         />
-        <Select items={selectItems} onSelect={setCategory} />
+        <Select items={selectItems} onSelect={setCategory} default="transport" />
         <TextInput 
           style={homeStyle.input} 
           placeholder="notes" 
