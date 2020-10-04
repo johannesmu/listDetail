@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Button, FlatList } from 'react-native'
+import React, {useState} from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { TextInput } from 'react-native-gesture-handler'
 import { Select } from './Select'
 
 
